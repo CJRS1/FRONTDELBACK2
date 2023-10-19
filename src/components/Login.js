@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 // import axios from 'axios';
 // import jwt_decode from "jwt-decode";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '../styles/variables.css';
 
-export default function Inicio({ setIsLoggedIn}) {
+import { TextField } from '@mui/material';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../styles/Login.css'
+
+export default function Login() {
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -14,10 +17,12 @@ export default function Inicio({ setIsLoggedIn}) {
         window.scrollTo(0, 0);
     }, [location]);
 
-    // const [email, setEmail] = useState('');
-    // const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-
+    const handleSubmit = async (e) => {
+        console.log('hola')
+    }
     // const handleSubmit = async (e) => {
     //     e.preventDefault();
 
@@ -27,7 +32,7 @@ export default function Inicio({ setIsLoggedIn}) {
     //             email,
     //             password, // Aquí enviamos el email y la contraseña en el cuerpo de la solicitud
     //         });
-            
+
     //         if (response.status === 200) {
     //             // Inicio de sesión exitoso
     //             const data = response.data; // No es necesario usar await ni .json()
@@ -53,7 +58,7 @@ export default function Inicio({ setIsLoggedIn}) {
     //                         const responseData = res.data.content;
     //                         console.log(responseData);
     //                         // setData(responseData);
-                            
+
     //                         // Opcional: Guardar los datos en el localStorage
     //                         localStorage.setItem('data', JSON.stringify(responseData));
     //                     } else {
@@ -85,15 +90,17 @@ export default function Inicio({ setIsLoggedIn}) {
                 <span className="linea"></span>
             </div>
             <form onSubmit={handleSubmit} encType="multipart/form-data" className="form_iniciar_sesion">
-                <input type="email"
+                <TextField type="email"
                     name="email"
+                    label="Email"
                     className="input_ingreso_a"
                     placeholder="Correo Electrónico"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
-                <input type="password"
+                <TextField type="password"
                     name="pwd_hash"
+                    label="Contraseña"
                     className="input_ingreso_a"
                     placeholder="Contraseña"
                     value={password}
