@@ -1,0 +1,70 @@
+.resiasesor {
+  margin-left: 100px;
+  width: calc(100% - 100px);
+  height: 100% !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: white;
+}
+.resiasesor .registro_asesor_container {
+  width: 600px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  padding: 30px 0 30px 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+}
+.resiasesor .regisasesor_container {
+  width: 400px;
+}
+.resiasesor .regisasesor_container .form_registro_asesor {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.button_backend {
+  margin-top: 20px;
+  width: 50%;
+}
+
+.input_registro_asesor {
+  width: 100%;
+  height: 38px;
+  padding-left: 10px;
+}
+
+.franja_verd {
+  width: 100%;
+  height: 150px;
+  background: #00d799;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.franja_verd h1 {
+  color: white !important;
+  font-weight: 800;
+}
+
+.regisasesor_container_a {
+  width: 100%;
+  min-height: calc(100vh - 150px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+input {
+  border: 3px solid #00d799;
+  margin-bottom: 10px;
+  width: 100%;
+  height: 40px;
+  border-radius: 6px;
+  text-align: center;
+}/*# sourceMappingURL=RegistrarAV.css.map */

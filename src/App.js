@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Login from './components/Login'
 import NavBarLat from './components/NavBarLat'
+import Registrar from './components/RegistrarAsesorVentas'
 // import Calendario from './components/Calendrio'
 // import Cotizar from './components/Cotizar'
 // import Reportes from './components/Reportes'
@@ -17,6 +18,7 @@ function App() {
       <NavBarLat/>
       <Routes>
         <Route path='/login_v' element={<Login />}/>
+        <Route path='/registrar_asesor' element={<Registrar />}/>
 
         {/* <Route path='/tabla_asesores' element={<TablaAsesores />}/>
         <Route path='/calendario' element={<Calendario />}/>

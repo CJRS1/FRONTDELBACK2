@@ -23,6 +23,10 @@ export default function NavBarLat() {
     const [imgNext, setImgNext] = useState('btn_left_right block');
     const [imgPrev, setImgPrev] = useState('btn_left_right hidden ');
     const [linkClass, setLinkClass] = useState('Link_anc center');
+    const [dropdownClass, setDropdownClass] = useState('dropdown_svg');
+    const [dropdownClass2, setDropdownClass2] = useState('hidden');
+    const [dropdownClass3, setDropdownClass3] = useState('hidden');
+    const [dropdownClass4, setDropdownClass4] = useState('hidden');
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -99,6 +103,10 @@ export default function NavBarLat() {
             setImgPrev('btn_left_right')
             setImgNext('btn_left_right hidden');
             setLinkClass('Link_anc');
+            setDropdownClass('dropdown_svg hidden');
+            setDropdownClass2('hidden');
+            setDropdownClass3('dropdown_svg');
+            setDropdownClass4('hidden');
         } else {
             setNavClass('navbar_header_container minimized');
             setOpcionesClass('opciones_backend hidden');
@@ -108,6 +116,10 @@ export default function NavBarLat() {
             setImgPrev('btn_left_right hidden');
             setImgNext('btn_left_right block');
             setLinkClass('Link_anc center');
+            setDropdownClass('dropdown_svg');
+            setDropdownClass2('hidden');
+            setDropdownClass3('hidden');
+            setDropdownClass4('hidden');
         }
     };
 
@@ -115,6 +127,29 @@ export default function NavBarLat() {
 
     const toggleVisibility = () => {
         setShowItems(!showItems);
+        setDropdownClass2('dropdown_svg');
+        setDropdownClass('hidden');
+        if ((showItems) && (navClass === 'navbar_header_container minimized')) {
+            console.log('hola2')
+            setDropdownClass('dropdown_svg');
+            setDropdownClass2('hidden');
+        }
+        if  (navClass === 'navbar_header_container') {
+            console.log('hola')
+            setDropdownClass('hidden');
+            setDropdownClass2('hidden');
+        }
+        if ((showItems) && (navClass === 'navbar_header_container')) {
+            console.log('hola2')
+            setDropdownClass3('dropdown_svg');
+            setDropdownClass4('hidden');
+        } 
+        if ((!showItems) && (navClass === 'navbar_header_container')) {
+            console.log('hola2')
+            setDropdownClass4('dropdown_svg');
+            setDropdownClass3('hidden');
+        }
+
     };
 
     return (
@@ -162,9 +197,28 @@ export default function NavBarLat() {
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black" className="bi bi-people-fill" viewBox="0 0 16 16">
                                 <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
                             </svg>
-                            <h5 className={opcionesClass} >Clientes <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
-                            </svg></h5>
+                            <div className={dropdownClass}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" class="bi bi-caret-down-fill " viewBox="0 0 16 16">
+                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                                </svg>
+                            </div>
+                            <div className={dropdownClass2}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+                                </svg>
+                            </div>
+                            <h5 className={opcionesClass} >Clientes
+                            </h5>
+                            <div className={dropdownClass3}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" class="bi bi-caret-down-fill " viewBox="0 0 16 16">
+                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                                </svg>
+                            </div>
+                            <div className={dropdownClass4}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+                                </svg>
+                            </div>
                         </Link>
                     </li>
                     {showItems && (
