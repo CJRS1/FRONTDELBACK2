@@ -16,7 +16,7 @@ export default function TablaUsuarios() {
     return (
         <div className="tabla_usuarios">
             <div className="franja_verd">
-                <h1>Lista de Asesores de Ventas</h1>
+                <h1>Referidos por Facebook</h1>
             </div>
             <div className="tabla_usuario_container">
                 {/* <div className="filtro_container filtro_usuarios">

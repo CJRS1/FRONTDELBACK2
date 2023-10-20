@@ -7,6 +7,7 @@ import { TextField } from '@mui/material';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/Login.css'
+import '../styles/General.css'
 
 export default function Login() {
 

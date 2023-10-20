@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/RegistrarAV.css'
+import '../styles/General.css'
 
 
 export default function RegistrarAsesor() {
