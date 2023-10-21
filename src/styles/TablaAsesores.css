@@ -68,4 +68,12 @@
 .franja_verd h1 {
   color: white !important;
   font-weight: 800;
+}
+
+td {
+  text-align: center;
+}
+
+th {
+  text-align: center;
 }/*# sourceMappingURL=TablaAsesores.css.map */

@@ -58,4 +58,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@media (max-width: 1500px) {
+  .resiasesor {
+    min-height: 120vh !important;
+  }
+  .regisasesor_container_a {
+    min-height: calc(120vh - 150px);
+  }
 }/*# sourceMappingURL=RegistrarAV.css.map */

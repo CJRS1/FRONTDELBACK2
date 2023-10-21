@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
 // import ReactPaginate from 'react-paginate';
+import axios from 'axios';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/TablaAsesores.css'
@@ -9,9 +10,27 @@ import '../styles/TablaAsesores.css'
 export default function TablaUsuarios() {
     const location = useLocation();
 
+    const [asesoresVentas, setAsesoresVentas ] = useState([]);
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [location]);
+
+    console.log(asesoresVentas);
+
+    useEffect(() => {
+        const obtenerAsesoresVentas = async() => {
+            try{
+                const response = await axios.get('http://localhost:5000/asesor_ventas');
+                if(response.status === 200) {
+                    setAsesoresVentas(response.content);
+                }
+            } catch (err){
+                console.log(err);
+            }
+        };
+        obtenerAsesoresVentas();
+    },[]);
 
     return (
         <div className="tabla_usuarios">

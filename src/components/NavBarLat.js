@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, Link, useNavigate } from 'react-router-dom';
-// import axios from 'axios';
-// import jwt_decode from "jwt-decode";
+import axios from 'axios';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/NavBarLat.css'
 import '../styles/General.css'
 
-export default function NavBarLat() {
+export default function NavBarLat({ setIsLoggedIn, isAsesorN, isAsesorA, setIsAsesorN, setIsAsesorA }) {
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -29,70 +28,55 @@ export default function NavBarLat() {
     const [dropdownClass3, setDropdownClass3] = useState('hidden');
     const [dropdownClass4, setDropdownClass4] = useState('hidden');
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    // const [email, setEmail] = useState('');
+    // const [password, setPassword] = useState('');
 
-    const handleSubmit = async (e) => {
-        console.log('hola')
+    const [userData, setUserData] = useState(null);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+
+        // Obtener el token del localStorage
+        const token = localStorage.getItem('token');
+
+        // Verificar si el token existe
+        if (token) {
+            // Si el token existe, realiza una solicitud al servidor para obtener los datos del usuario
+            axios.get('http://localhost:5000/asesor_ventass', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+                .then(response => {
+                    console.log(response.data.content);
+                    setUserData(response.data.content.asesor); // Almacena los datos del usuario en el estado
+                })
+                .catch(error => {
+                    if (error.response && error.response.status === 401) {
+                        // Error de Unauthorized, pero no mostramos esto como un error en la consola
+                    } else {
+                        console.log(error);
+                    }
+                });
+        }
+    }, [location]);
+
+    const handleLogout = async () => {
+        try {
+            const res = await axios.post('http://localhost:5000/logout');
+            console.log(res.data);
+            localStorage.removeItem('data');
+            localStorage.removeItem('token');
+            setIsAsesorN(false);
+            setIsAsesorA(false);
+            setIsLoggedIn(false);
+            navigate("/login_v")
+        } catch (e) {
+            console.log(e);
+        }
     }
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
 
-    //     try {
-    //         // Realiza una solicitud de inicio de sesión al servidor
-    //         const response = await axios.post("https://amddibackend-production-2880.up.railway.app/loginA", {
-    //             email,
-    //             password, // Aquí enviamos el email y la contraseña en el cuerpo de la solicitud
-    //         });
 
-    //         if (response.status === 200) {
-    //             // Inicio de sesión exitoso
-    //             const data = response.data; // No es necesario usar await ni .json()
-    //             console.log(data);
-    //             // Almacena el token en el almacenamiento local o en una cookie
-    //             localStorage.setItem("token", data.token);
-    //             localStorage.setItem('isLoggedIn', true);
-    //             // Decodifica el token para obtener el rol
-    //             const decodedToken = jwt_decode(data.token);
-    //             // console.log("Rol del usuario:", decodedToken.rol);
-    //             setIsLoggedIn(true);
-    //             // Redirige a la página correspondiente según el rol
-    //             if (decodedToken.rol === "admin") {
-    //                 navigate("/registrar_asesor");
-    //                 window.location.reload();
-    //                 // console.log(decodedToken.rol);
-    //             } else if (decodedToken.rol === "asesor") {
-    //                 console.log("Este es un", decodedToken.rol);
-    //                 try {
-    //                     const res = await axios.get(`https://amddibackend-production-2880.up.railway.app/asesoress/${email}`);
-    //                     if (res.status === 200) {
-    //                         // La solicitud fue exitosa (código de estado 200)
-    //                         const responseData = res.data.content;
-    //                         console.log(responseData);
-    //                         // setData(responseData);
-
-    //                         // Opcional: Guardar los datos en el localStorage
-    //                         localStorage.setItem('data', JSON.stringify(responseData));
-    //                     } else {
-    //                         console.log(`La solicitud no fue exitosa. Código de estado: ${res.status}`);
-    //                     }
-    //                 } catch (e) {
-    //                     console.error(e);
-    //                 }
-    //                 navigate("/asesorado_principal");
-    //                 window.location.reload();
-    //             }
-    //         } else {
-    //             // Error en el inicio de sesión
-    //             console.error("Error en el inicio de sesión");
-    //         }
-    //     } catch (error) {
-    //         alert("Error al ingresar correo o contraseña");
-    //         // alert("La contraseña o el correo es incorrecto");
-
-    //         setIsLoggedIn(false);
-    //     }
-    // };
 
     const handleToggleNav = () => {
         if (navClass === 'navbar_header_container minimized') {
@@ -153,19 +137,44 @@ export default function NavBarLat() {
 
     };
 
+    useEffect(() => {
+        if (isAsesorN && location.pathname !== '/calendario' && location.pathname !== '/cotizar' && location.pathname !== '/reportes' && location.pathname !== '/referidos_facebook' && location.pathname !== '/referidos_whatsapp' && location.pathname !== '/referidos_instagram' && location.pathname !== '/referidos_mail' && location.pathname !== '/clientes_concretados' && location.pathname !== '/clientes_potenciales') {
+            // Redirige al asesor a /asesorado_principal si no está en uno de los enlaces permitidos
+            navigate('/clientes_potenciales');
+        }
+    }, [isAsesorN, location, navigate]);
+
+    useEffect(() => {
+        if (isAsesorA && location.pathname !== '/registrar_asesor' && location.pathname !== '/asesores_ventas' && location.pathname !== '/calendario' && location.pathname !== '/cotizar' && location.pathname !== '/referidos_facebook' && location.pathname !== '/referidos_whatsapp' && location.pathname !== '/referidos_instagram' && location.pathname !== '/referidos_mail' && location.pathname !== '/clientes_concretados' && location.pathname !== '/clientes_potenciales') {
+            // Redirige al asesor a /asesorado_principal si no está en uno de los enlaces permitidos
+            navigate('/registrar_asesor');
+        }
+    }, [isAsesorA, location, navigate]);
+
+    const storedData = localStorage.getItem('data');
+    const parsedData = storedData ? JSON.parse(storedData) : null;
+
+    const primeraLetraN = userData?.nombre?.charAt(0) || parsedData?.nombre?.charAt(0) || '';
+    const primeraLetraA = userData?.apePat?.charAt(0) || parsedData?.apePat?.charAt(0) || '';
+    const email = userData?.email || parsedData?.email || '';
+
+    console.log("el uasesor",userData);
+    console.log('es o no es',isAsesorA);
+    console.log('es o no e',isAsesorN);
+
     return (
         <div className={navClass}>
             <div className="datos_backend_card">
                 <img className={imgClass} src={require('../images/Logo_plomo.png')} alt='logo' />
                 <img className={imgClass1} src={require('../images/Logo_plomo_solo.png')} alt='logo' />
                 {/* <h3 className={opcionesClass}>{parsedData ? `${parsedData.nombre} ${parsedData.apePat}` : ''} </h3> */}
-                {/* <h3 className={opcionesClass}>{userData ? `${userData.nombre} ${userData.apePat}` : (parsedData ? `${parsedData.nombre} ${parsedData.apePat}` : '')}</h3> */}
-                <h3 className={opcionesClass}>Christian Reyes</h3>
+                <h3 className={opcionesClass}>{userData ? `${userData.nombre} ${userData.apePat}` : (parsedData ? `${parsedData.nombre} ${parsedData.apePat}` : '')}</h3>
+                {/* <h3 className={opcionesClass}>Christian Reyes</h3> */}
 
-                {/* <h3 className={nameClass} >{primeraLetraN}{primeraLetraA} </h3> */}
-                <h3 className={nameClass} >CR </h3>
-                {/* <h4 className={opcionesClass}>{email} </h4> */}
-                <h4 className={opcionesClass}>reyes.christian@pucp.pe </h4>
+                <h3 className={nameClass} >{primeraLetraN}{primeraLetraA} </h3>
+                {/* <h3 className={nameClass} >CR </h3> */}
+                <h4 className={opcionesClass}>{email} </h4>
+                {/* <h4 className={opcionesClass}>reyes.christian@pucp.pe </h4> */}
                 <button className={imgPrev} onClick={handleToggleNav}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fillRule="#666666" className="bi bi-arrow-left-circle-fill btn_ho" viewBox="0 0 16 16">
                         <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z" />
@@ -180,8 +189,8 @@ export default function NavBarLat() {
             <hr />
             <nav className="navlat_container">
                 <ul className="navlat_list">
-                    {/* {isAdmin && (
-                        <> */}
+                    {isAsesorA && (
+                        <>
                     <li>
                         <Link to="/registrar_asesor" className={linkClass}>
                             <svg className="icon bi bi-person-fill-add" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fillRule="currentColor" viewBox="0 0 16 16">
@@ -193,38 +202,38 @@ export default function NavBarLat() {
                     </li>
                     <li>
                         <Link to="/asesores_ventas" className={linkClass}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black" className="bi bi-person-lines-fill" viewBox="0 0 16 16">
                                 <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z" />
                             </svg>
                             <h5 className={opcionesClass} >Asesores de Ventas</h5>
                         </Link>
                     </li>
-                    {/* </>
-                    )} */}
+                    </>
+                    )}
                     <li onClick={toggleVisibility}>
                         <Link to="/clientes_potenciales" className={linkClass}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black" className="bi bi-people-fill" viewBox="0 0 16 16">
                                 <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
                             </svg>
                             <div className={dropdownClass}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" class="bi bi-caret-down-fill " viewBox="0 0 16 16">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" className="bi bi-caret-down-fill " viewBox="0 0 16 16">
                                     <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
                                 </svg>
                             </div>
                             <div className={dropdownClass2}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" className="bi bi-caret-up-fill" viewBox="0 0 16 16">
                                     <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
                                 </svg>
                             </div>
                             <h5 className={opcionesClass} >Clientes
                             </h5>
                             <div className={dropdownClass3}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" class="bi bi-caret-down-fill " viewBox="0 0 16 16">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" className="bi bi-caret-down-fill " viewBox="0 0 16 16">
                                     <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
                                 </svg>
                             </div>
                             <div className={dropdownClass4}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="black" className="bi bi-caret-up-fill" viewBox="0 0 16 16">
                                     <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
                                 </svg>
                             </div>
@@ -302,7 +311,7 @@ export default function NavBarLat() {
                     </li>
                     <li>
                         <Link to="/asesorado_secundario" className={linkClass}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black" class="bi bi-file-bar-graph-fill" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black" className="bi bi-file-bar-graph-fill" viewBox="0 0 16 16">
                                 <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm-2 11.5v-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-2.5.5a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-1zm-3 0a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-1z" />
                             </svg>
                             <h5 className={opcionesClass} >Reporte</h5>
@@ -310,7 +319,7 @@ export default function NavBarLat() {
                     </li>
                     <li>
                         <Link to="/login_v" className={linkClass}
-                        // onClick={handleLogout}
+                        onClick={handleLogout}
                         >
                             <svg className="icon bi bi-door-open-fill" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fillRule="currentColor" viewBox="0 0 16 16">
                                 <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0 0 3 1.5V15H1.5zM11 2h.5a.5.5 0 0 1 .5.5V15h-1V2zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1z" />
